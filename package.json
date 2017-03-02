@@ -1,0 +1,33 @@
+{
+    "name": "look-shop-api",
+    "version": "1.0.0",
+    "description": "Server with Node.js for online shop",
+    "main": "index.js",
+    "scripts": {
+        "start": "node ./server/index.js",
+	"dev-start": "nodemon ./server/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Silviya Boteva",
+    "license": "ISC",
+    "dependencies": {
+    "body-parser": "^1.15.2",
+    "gridfs": "^1.0.0",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "mongoose": "^4.7.4",
+    "multer": "^1.2.1",
+    "passport": "^0.3.2",
+    "passport-jwt": "^2.2.1",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "engines": {
+    "node":"6.9.1"
+  }
+}
