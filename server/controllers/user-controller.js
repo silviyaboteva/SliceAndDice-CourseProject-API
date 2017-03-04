@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function ({grid, database, data, encryption}) {
+module.exports = function({ grid, database, data, encryption }) {
     return {
         _validateToken(req, res) {
             let token = req.headers.authorization;
@@ -19,80 +19,53 @@ module.exports = function ({grid, database, data, encryption}) {
                 });
             }
         },
-        updatePrivateInfo(req, res) {
-            let gfs = grid(database.connection.db, database.mongo);
-            console.log(req.file);
-
-            if (!req.user) {
-                return res.json({
-                    succes: false,
-                    message: 'Please enter your credentials'
-                });
-            }
-
-            let user = req.user;
-            let userHash = req.user.passHash;
-
-            // let hashedEnteredPassword = user.generatePassHash(req.body.currentPassword);
-            // if (userHash !== hashedEnteredPassword) {
-            //     return res.json({
-            //         succes: false,
-            //         message: 'Please enter valid credentials'
-            //     });
-            // }
-
-            let newUserHash = false;
-
-            if (req.body.newPassword) {
-                newUserHash = user.generatePassHash(req.body.newPassword);
-            }
-            console.log(req.file);
-            console.log(' ');
-            console.log(' ');
-            console.log(' ');
-            console.log(' ');
-            console.log(' ');
-
-            let file = req.file.buffer;
-
-            gfs.writeFile({}, file.buffer, (_, foundFile) => {
-                let avatar = foundFile._id;
-
-                let infoToUpdate = {
-                    email: req.body.email,
-                    passHash: newUserHash,
-                    avatar: avatar
-                };
-
-                data.updateUserPrivateInfo(user._id, infoToUpdate)
-                    .then(result => {
-                        return res.status(201).json({
-                            succes: true,
-                            message: 'Userinfo has been updated successfully'
-                        });
-                    })
-                    .catch(() => {
-                        return res.json({
-                            succes: false,
-                            message: 'User with the same email already exists!'
-                        });
-                    });
-            });
+        getProfile(req, res) {
+            res.json({ result: { user: req.user } });
         },
-        getUserCourses(req, res) {
-            let username = req.params.username;
+        editProfile(req, res) {
+            const username = req.user.username;
 
-            data.getUserCourses(username)
-                .then((result) => {
-                    return res.status(200).json(result)
+            const userInfo = {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email
+            };
+
+            data.updateUserInformation(username, userInfo)
+                .then(() => {
+                    return res.json({ result: { success: true, message: 'Profile information updated!' } });
+                })
+                .catch(() => {
+                    return res.status(500).json({ error: { message: "User information could not be updated" } })
                 });
         },
-        addFactToFavorites(req, res) {
-            let username = req.params.username;
-            let fact = req.body.fact;
+        getCart(req, res) {
+            const username = req.user.username;
+            data.getUserCartProducts(username)
+                .then((products) => {
+                    res.json({ result: { products } });
+                })
+        },
+        addToCart(req, res) {
+            const username = req.user.username;
+            const product = req.body;
 
-            data.addFactToFavorites(username, fact);
+            data.addProductToCart(username, product)
+                .then(() => {
+                    return res.json({ result: { success: true, message: 'Product added to cart!' } });
+                })
+                .catch(() => {
+                    return res.status(500).json({ error: { message: 'Product could not be added to cart!' } });
+                });
+        },
+        removeFromCart(req, res) {
+            const username = req.user.username;
+            const product = req.body;
 
+            data.removeProductFromCart(username, product)
+                .then(() => {
+                    return res.json({ result: { success: true, message: 'Product removed from cart!' } });
+                })
         },
         uploadAvatar(req, res, img) {
             this._validateToken(req, res);

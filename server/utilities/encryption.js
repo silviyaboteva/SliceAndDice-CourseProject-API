@@ -8,8 +8,7 @@ module.exports = {
         crypto.createHmac('sha256', salt).update(pwd).digest('hex'),
     deciferToken: (token) => {
 
-        // need to remove 'JWT ' in order to decode it ... (i know it sucks!)
-        let decoded = jwt.decode(token.split(' ')[1], 'magicstring');      
+        let decoded = jwt.decode(token.split(' ')[1], 'magicstring');
 
         let user = null;
 
@@ -24,7 +23,6 @@ module.exports = {
         user = {
             username: userInfo.username
         };
-        // add more info if you need it
 
         return user;
     }

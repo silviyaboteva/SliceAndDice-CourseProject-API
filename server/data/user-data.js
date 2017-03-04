@@ -2,8 +2,8 @@
 'use strict';
 
 module.exports = (models) => {
-    const {User} = models;
-    const {Course} = models;
+    const { User } = models;
+    const { Course } = models;
 
     return {
         getAll() {
@@ -69,29 +69,55 @@ module.exports = (models) => {
                 });
             });
         },
-        addFactToFavorites(username, fact) {
-            this.getByUsername(username)
-                .then(user => {
-                    user.favoriteFacts.push(fact);
-                    user.save();
-                });
-        },
-        getUserCourses(username) {
+        updateUserInformation(username, newInfo) {
             return new Promise((resolve, reject) => {
-                this.getByUsername(username)
-                    .then(result => {
-                        let coursesIds = [];
-                        result.courses.forEach(function (courseId) {
-                            coursesIds.push(courseId);
-                        });
-                        Course.find({ '_id': { $in: coursesIds } }, (err, courses) => {
-                            console.log('test', courses);
-                            resolve(courses);
-                        });
-                    });
-
+                User.findOneAndUpdate({ username }, newInfo,
+                    (err, user) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        return resolve(user);
+                    })
             });
+        },
+        getUserCartProducts(username) {
+            return new Promise((resolve, reject) => {
+                User.findOne({ 'username': username }, (err, user) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
+                    if (!user) {
+                        return reject({ error: 'User not found' });
+                    }
+
+                    return resolve(user.cartProducts);
+                })
+            });
+        },
+        addProductToCart(username, product) {
+            return new Promise((resolve, reject) => {
+                User.findOneAndUpdate({ 'username': username }, { $addToSet: { 'cartProducts': product } })
+                    .then(() => {
+                        resolve();
+                    }).catch(err => reject(err));
+            });
+        },
+        removeProductFromCart(username, product) {
+            return new Promise((resolve, reject) => {
+                User.findOneAndUpdate({ 'username': username }, { $pull: { 'cartProducts': product } })
+                    .then(() => {
+                        resolve();
+                    }).catch(err => reject(err));
+            });
+        },
+        emptyCart(username) {
+            return new Promise((resolve, reject) => {
+                User.findOneAndUpdate({ 'username': username }, { $set: { 'cartProducts': [] } })
+                    .then(() => {
+                        resolve();
+                    }).catch(err => reject(err));
+            });
         },
         uploadAvatar(username, img, password) {
             return new Promise((resolve, reject) => {
@@ -114,25 +140,6 @@ module.exports = (models) => {
                     .then(result => {
                         resolve(result.avatar);
                     });
-            });
-        },
-        updateUserPrivateInfo(id, info) {
-
-            return new Promise((resolve, reject) => {
-                Promise.all([this.getUserById(id), this.getUserByEmail(info.email)])
-                    .then(([userFromId, userFromMail]) => {
-                        if (userFromMail) {
-                            reject(userFromId);
-                        }
-
-                        userFromId.passHash = info.passHash || userFromId.passHash;
-                        userFromId.email = info.email || userFromId.email;
-                        userFromId.avatar = info.avatar || userFromId.avatar;
-
-                        userFromId.save();
-                        resolve(userFromId);
-                    });
-
             });
         }
     };
