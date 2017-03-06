@@ -7,13 +7,9 @@ module.exports = function(models, validator) {
     return {
         getAllProducts() {
             return new Promise((resolve, reject) => {
-                Product.find({}, function(err, meals) {
-                    if (err) {
-                        return reject(err);
-                    };
+                let products = Product.find({});
 
-                    return resolve(meals);
-                });
+                resolve(products);
             });
         },
         getProductById(id) {
@@ -64,5 +60,23 @@ module.exports = function(models, validator) {
                     })
             });
         },
+        createProduct(name, price, description, image) {
+            let product = new Product({
+                name,
+                price,
+                description,
+                image
+            });
+
+            return new Promise((resolve, reject) => {
+                product.save((err) => {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    return resolve(product);
+                });
+            });
+        }
     };
 };

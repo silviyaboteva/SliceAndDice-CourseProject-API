@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
         default: 'default-avatar.png'
     },
     cartProducts: [{}],
-    roles: [String],
+    roles: [String]
 });
 
 userSchema.virtual('isAdmin').get(function() {

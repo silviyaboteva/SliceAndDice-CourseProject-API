@@ -67,36 +67,24 @@ module.exports = function({ grid, database, data, encryption }) {
                     return res.json({ result: { success: true, message: 'Product removed from cart!' } });
                 })
         },
-        uploadAvatar(req, res, img) {
-            this._validateToken(req, res);
-
-            let username = req.body.username;
-            let passwordFromReq = req.body.currentPassword;
-
-            if (!passwordFromReq) {
-                return res.json({
-                    succes: false,
-                    message: 'Password is not valid'
-                });
-            }
-
-            data.uploadAvatar(username, img, passwordFromReq)
-                .then(user => {
-                    return res.status(200).send(img);
-                })
-                .catch(() => {
-                    return res.json({
-                        succes: false,
-                        message: 'Password is not valid'
-                    });
-                });
-
-        },
         getAvatar(req, res) {
-            let username = req.params.username;
+            let gfs = grid(database.connection.db, database.mongo);
 
-            data.getAvatar(username)
-                .then(result => res.status(200).json(result));
+            let id = req.params.id;
+
+            gfs.exist({ _id: id }, (_, exists) => {
+                if (!exists) {
+                    res.status(404);
+                    res.end();
+                } else {
+                    let readStream = gfs.createReadStream({ _id: id });
+                    res.set('Content-Type', 'image/jpeg');
+
+                    readStream.pipe(res);
+                }
+            });
+
+
         }
     };
 };

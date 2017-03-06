@@ -35,7 +35,7 @@ module.exports = function({ grid, database, data, encryption }) {
             if (req.body === null || typeof(req.body) === 'undefined') {
                 return res.json({ success: false, message: 'request body is empty' });
             }
-
+            console.log(req.body);
             let username = req.body.username;
             let email = req.body.email;
             let password = req.body.password.toString();
@@ -56,9 +56,8 @@ module.exports = function({ grid, database, data, encryption }) {
 
             const salt = encryption.generateSalt();
             const passHash = encryption.generateHashedPassword(salt, password);
-            let file = req.file.buffer;
 
-            gfs.writeFile({}, file.buffer, (_, foundFile) => {
+            gfs.writeFile({}, req.file.buffer, (_, foundFile) => {
                 let avatar = foundFile._id;
 
                 Promise.all([data.getByUsername(username), data.getUserByEmail(email)])

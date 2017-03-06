@@ -5,8 +5,8 @@
 const mongoose = require('mongoose');
 
 let productSchema = new mongoose.Schema({
-    imagesLink: {
-        type: [String],
+    image: {
+        type: String,
         required: true
     },
     name: {

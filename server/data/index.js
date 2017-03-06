@@ -1,20 +1,15 @@
 /*globals */
 'use strict';
 
-const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function(config) {
-    mongoose.Promise = global.Promise;
-    mongoose.connect(config.connectionString);
+module.exports = function() {
 
     let User = require('../models/user-model'),
-        Home = require('../models/home-model'),
-        Image = require('../models/image-model'),
         Product = require('../models/product-model'),
         validator = require('../models/utils/validator');
-    let models = { User, Home, Image, Product };
+    let models = { User, Product };
     let data = {};
 
     fs.readdirSync(__dirname)
