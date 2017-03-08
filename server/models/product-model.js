@@ -21,6 +21,10 @@ let productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    category: {
+        type: String,
+        required: true
+    },
     usersLiked: [String],
     likes: { type: Number, default: 0 }
 });

@@ -16,31 +16,19 @@ module.exports = (models) => {
                 });
             });
         },
-        getUserById(userId) {
-            return new Promise((resolve, reject) => {
-                User.findOne({ _id: userId }, (err, user) => {
-                    if (err) {
-                        return reject(err);
-                    }
-
-                    return resolve(user);
-                });
-            });
-        },
-        getUserByEmail(email) {
-            return new Promise((resolve, reject) => {
-                User.findOne({ email }, (err, user) => {
-                    if (err) {
-                        return reject(err);
-                    }
-                    return resolve(user);
-                });
-            });
-        },
         getByUsername(username) {
             return new Promise((resolve, reject) => {
                 User.findOne({ username: username }, (err, user) => {
-
+                    if (err) {
+                        return reject(err);
+                    }
+                    return resolve(user);
+                });
+            });
+        },
+        getUserById(userId) {
+            return new Promise((resolve, reject) => {
+                User.findOne({ _id: userId }, (err, user) => {
                     if (err) {
                         return reject(err);
                     }
@@ -69,17 +57,6 @@ module.exports = (models) => {
                 });
             });
         },
-        updateUserInformation(username, newInfo) {
-            return new Promise((resolve, reject) => {
-                User.findOneAndUpdate({ username }, newInfo,
-                    (err, user) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        return resolve(user);
-                    })
-            });
-        },
         getUserCartProducts(username) {
             return new Promise((resolve, reject) => {
                 User.findOne({ 'username': username }, (err, user) => {
@@ -106,14 +83,6 @@ module.exports = (models) => {
         removeProductFromCart(username, product) {
             return new Promise((resolve, reject) => {
                 User.findOneAndUpdate({ 'username': username }, { $pull: { 'cartProducts': product } })
-                    .then(() => {
-                        resolve();
-                    }).catch(err => reject(err));
-            });
-        },
-        emptyCart(username) {
-            return new Promise((resolve, reject) => {
-                User.findOneAndUpdate({ 'username': username }, { $set: { 'cartProducts': [] } })
                     .then(() => {
                         resolve();
                     }).catch(err => reject(err));

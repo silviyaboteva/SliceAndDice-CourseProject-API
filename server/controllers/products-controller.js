@@ -2,7 +2,7 @@
 
 module.exports = ({ grid, database, data, encryption }) => {
     return {
-        getAll(req, res) {
+        getAllProducts(req, res) {
             data.getAllProducts()
                 .then((products) => {
                     res.status(200).json({
@@ -11,6 +11,51 @@ module.exports = ({ grid, database, data, encryption }) => {
                         }
                     });
                 })
+                .catch(() => {
+                    res.status(500);
+                });
+        },
+        getProductById(req, res) {
+            let id = req.params.id;
+
+            data.getProductById(id)
+                .then((result) => {
+                    return res.status(200).json(result);
+                })
+                .catch(() => {
+                    res.status(500);
+                });
+        },
+        getProductsByCategory(req, res) {
+            let category = req.body.category;
+
+            data.getProductsByCategory(category)
+                .then((result) => {
+                    return res.status(200).json(result);
+                })
+                .catch(() => {
+                    res.status(500);
+                });
+        },
+        getProductsByPrice(req, res) {
+            let price = req.body.price;
+
+            data.getProductsByPrice(price)
+                .then((result) => {
+                    return res.status(200).json(result);
+                })
+                .catch(() => {
+                    res.status(500);
+                });
+        },
+        getMostPopularProducts(req, res) {
+            data.getMostPopularProducts()
+                .then((result) => {
+                    return res.status(200).json(result);
+                })
+                .catch(() => {
+                    res.status(500);
+                });
         },
         likeProduct(req, res) {
             const id = req.params.id;
@@ -20,7 +65,7 @@ module.exports = ({ grid, database, data, encryption }) => {
                     res.status(200).json(result);
                 })
                 .catch(() => {
-                    res.status(500).redirect('/500');
+                    res.status(500);
                 });
         },
         dislikeProduct(req, res) {
@@ -31,7 +76,7 @@ module.exports = ({ grid, database, data, encryption }) => {
                     res.status(200).json(result);
                 })
                 .catch(() => {
-                    res.status(500).redirect('/500');
+                    res.status(500);
                 });
         },
 
@@ -41,16 +86,20 @@ module.exports = ({ grid, database, data, encryption }) => {
             let name = req.body.name;
             let price = req.body.price;
             let description = req.body.description;
+            let category = req.body.category;
 
             gfs.writeFile({}, req.file.buffer, (_, foundFile) => {
                 let image = foundFile._id;
 
-                data.createProduct(name, price, description, image)
+                data.createProduct(name, price, description, image, category)
                     .then(() => {
                         return res.status(201).json({
                             success: true,
                             message: 'Product created'
                         });
+                    })
+                    .catch(() => {
+                        res.status(500);
                     });
             });
         },

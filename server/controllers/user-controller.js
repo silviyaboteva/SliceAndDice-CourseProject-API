@@ -22,23 +22,6 @@ module.exports = function({ grid, database, data, encryption }) {
         getProfile(req, res) {
             res.json({ result: { user: req.user } });
         },
-        editProfile(req, res) {
-            const username = req.user.username;
-
-            const userInfo = {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                email: req.body.email
-            };
-
-            data.updateUserInformation(username, userInfo)
-                .then(() => {
-                    return res.json({ result: { success: true, message: 'Profile information updated!' } });
-                })
-                .catch(() => {
-                    return res.status(500).json({ error: { message: "User information could not be updated" } })
-                });
-        },
         getCart(req, res) {
             const username = req.user.username;
             data.getUserCartProducts(username)

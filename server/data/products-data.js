@@ -27,11 +27,43 @@ module.exports = function(models, validator) {
                 });
             });
         },
+        getProductsByCategory(category) {
+            return new Promise((resolve, reject) => {
+                Product.find({ category }, (err, products) => {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    if (!product) {
+                        return resolve(null);
+                    }
+
+                    return resolve(products);
+                });
+            });
+        },
+        getProductsByPrice(price) {
+            return new Promise((resolve, reject) => {
+                const products = Product.find({ price }, (err) => {
+                        if (err) {
+                            return reject(err);
+                        }
+
+                        if (!products) {
+                            return resolve(null);
+                        }
+                    })
+                    .sort({ 'price': 'inc' })
+                    .limit(5);
+
+                resolve(products)
+            });
+        },
         getMostPopularProducts() {
             return new Promise((resolve, reject) => {
                 const product = Product.find({})
                     .sort({ 'likes': 'desc' })
-                    .limit(10);
+                    .limit(5);
 
                 resolve(product);
             });
@@ -60,12 +92,13 @@ module.exports = function(models, validator) {
                     })
             });
         },
-        createProduct(name, price, description, image) {
+        createProduct(name, price, description, image, category) {
             let product = new Product({
                 name,
                 price,
                 description,
-                image
+                image,
+                category
             });
 
             return new Promise((resolve, reject) => {

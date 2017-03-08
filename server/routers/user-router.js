@@ -6,8 +6,9 @@ const router = require('express').Router();
 module.exports = function({ upload, app, controllers, passport, auth }) {
     const userController = controllers.user;
 
-    router.get('/profile/avatar/:id', userController.getAvatar);
-    //TODO
+    router
+        .get('/profile/avatar/:id', userController.getAvatar)
+        .get('/profile/:id', userController.getProfile)
 
     app.use('/api/users', router);
 };
