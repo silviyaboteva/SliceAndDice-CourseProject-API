@@ -27,7 +27,7 @@ module.exports = ({ grid, database, data, encryption }) => {
                 });
         },
         getProductsByCategory(req, res) {
-            let category = req.body.category;
+            let category = req.query.category.toLowerCase();
 
             data.getProductsByCategory(category)
                 .then((result) => {
@@ -37,6 +37,7 @@ module.exports = ({ grid, database, data, encryption }) => {
                     res.status(500);
                 });
         },
+        //Clearance
         getProductsByPrice(req, res) {
             let price = req.body.price;
 
@@ -48,6 +49,7 @@ module.exports = ({ grid, database, data, encryption }) => {
                     res.status(500);
                 });
         },
+        //What's hot
         getMostPopularProducts(req, res) {
             data.getMostPopularProducts()
                 .then((result) => {

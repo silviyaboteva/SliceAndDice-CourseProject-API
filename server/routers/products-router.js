@@ -9,8 +9,8 @@ module.exports = ({ upload, app, controllers, auth }) => {
         .get('/all', productController.getAllProducts)
         .get('/:id', productController.getProductById)
         .get('/category', productController.getProductsByCategory)
+        .get('/category/popular', productController.getMostPopularProducts)
         .get('/price', productController.getProductsByPrice)
-        .get('/popular', productController.getMostPopularProducts)
         .get('/image/:id', productController.getProductImage)
         .post('/create', upload.single('image'), auth.isAuthenticated(), productController.createProduct)
 

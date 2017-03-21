@@ -27,9 +27,9 @@ module.exports = function(models, validator) {
                 });
             });
         },
-        getProductsByCategory(category) {
+        getProductsByCategory(category, pageNumber, pageSize) {
             return new Promise((resolve, reject) => {
-                Product.find({ category }, (err, products) => {
+                let products = Product.find({ category: category }, (err, product) => {
                     if (err) {
                         return reject(err);
                     }
@@ -37,7 +37,6 @@ module.exports = function(models, validator) {
                     if (!product) {
                         return resolve(null);
                     }
-
                     return resolve(products);
                 });
             });
