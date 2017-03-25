@@ -7,8 +7,8 @@ module.exports = function({ upload, app, controllers, passport, auth }) {
     const userController = controllers.user;
 
     router
-        .get('/profile/avatar/:id', userController.getAvatar)
-        .get('/profile/:id', userController.getProfile)
+        .get('/user/image/:id', userController.getAvatar)
+        .get('/user/:username', userController.getProfile)
 
     app.use('/api/users', router);
 };

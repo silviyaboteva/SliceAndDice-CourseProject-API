@@ -7,8 +7,8 @@ module.exports = ({ upload, app, controllers, auth }) => {
 
     router
         .get('/all', productController.getAllProducts)
-        .get('/:id', productController.getProductById)
-        .get('/category', productController.getProductsByCategory)
+        .get('/product/:id', productController.getProductById)
+        .get('/category/:category', productController.getProductsByCategory)
         .get('/category/popular', productController.getMostPopularProducts)
         .get('/price', productController.getProductsByPrice)
         .get('/image/:id', productController.getProductImage)

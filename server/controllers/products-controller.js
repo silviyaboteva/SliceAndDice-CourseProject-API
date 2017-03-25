@@ -27,8 +27,8 @@ module.exports = ({ grid, database, data, encryption }) => {
                 });
         },
         getProductsByCategory(req, res) {
-            let category = req.query.category.toLowerCase();
-
+            let category = req.params.category.toLowerCase();
+            console.log(category);
             data.getProductsByCategory(category)
                 .then((result) => {
                     return res.status(200).json(result);

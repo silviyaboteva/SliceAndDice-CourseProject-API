@@ -24,6 +24,7 @@ module.exports = function({ grid, database, data, encryption }) {
                         success: true,
                         message: `User ${user.username} logged in succesfully`,
                         token: 'JWT ' + token,
+                        username: user.username,
                         isUserBlocked: user.isBlocked
                     });
                 });

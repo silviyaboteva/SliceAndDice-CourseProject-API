@@ -20,7 +20,12 @@ module.exports = function({ grid, database, data, encryption }) {
             }
         },
         getProfile(req, res) {
-            res.json({ result: { user: req.user } });
+            var username = req.params.username;
+
+            return data.getByUsername(username)
+                        .then((user)=>{
+                            res.json({result:{user}});
+                        });
         },
         getCart(req, res) {
             const username = req.user.username;

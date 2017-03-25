@@ -26,6 +26,16 @@ module.exports = (models) => {
                 });
             });
         },
+        getUserByEmail(email) {
+            return new Promise((resolve, reject) => {
+                User.findOne({ email: email }, (err, user) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    return resolve(user);
+                });
+            });
+        },
         getUserById(userId) {
             return new Promise((resolve, reject) => {
                 User.findOne({ _id: userId }, (err, user) => {
